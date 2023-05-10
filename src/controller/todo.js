@@ -16,11 +16,34 @@ async function createTodo(req, res) {
   }
 }
 
+async function createTodoList(req, res) {
+  try {
+    const { todoId, name } = req.body
+    const todo = await Todo.findOne({ _id: todoId })
+
+    todo.todoList.push({name})
+    await todo.save()
+    res.status(200).json({
+      success: true,
+      message: 'Todo list has been added',
+      data: todo
+    })
+
+  } catch(err) {
+    console.log(err)
+    res.status(500).json({
+      success: false,
+      message: 'Error'
+    })
+  }
+}
+
 async function getTodo(req, res) {
   try {
-    const newTodo = await Todo.find({})
+    const {userId} = req.body
+    const todos = await Todo.find({owner: userId})
     res.status(200).json({
-      data: newTodo
+      data: todos
     })
   } catch {
     res.status(500).json()
@@ -33,7 +56,7 @@ async function deleteTodo(req, res) {
     const newTodo = await Todo.findByIdAndRemove({ _id: id}).exec()
     res.status(200).json({
       success: true,
-      message: 'Item has been deleted',
+      message: 'Todo has been deleted',
       item: newTodo,
     })
   } catch {
@@ -48,7 +71,7 @@ async function updateTodo(req, res) {
     const newTodo = await Todo.findOneAndUpdate({ _id: id}, {name}, {new: true}).exec()
     res.status(200).json({
       success: true,
-      message: 'Item has been updated',
+      message: 'Todo has been updated',
       item: newTodo
     })
   } catch  {
@@ -62,7 +85,7 @@ async function deleteListTodo(req, res) {
     const newTodo = await Todo.findByIdAndUpdate({_id: nameId}, {$pull: { todoList : { _id: listId}}}, {new: true}).exec()
     res.status(200).json({
       success: true,
-      message: 'Item has been deleted',
+      message: 'Todo list has been deleted',
       item: newTodo
     })
   } catch {
@@ -85,7 +108,7 @@ async function updateListTodo(req, res) {
     })
     res.status(200).json({
       success: true,
-      message: 'Item has been updated',
+      message: 'Todo list has been updated',
       item: newTodo
     })
   } catch {
@@ -99,5 +122,6 @@ module.exports = {
   deleteTodo,
   updateTodo,
   deleteListTodo,
-  updateListTodo
+  updateListTodo,
+  createTodoList
 }

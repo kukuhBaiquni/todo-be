@@ -15,8 +15,8 @@ async function register(req, res) {
     const duplicate = await User.findOne({ name })
     if (duplicate) {
       res.status(409).json({
+        success: false,
         message: 'Name already exist',
-        status: 'ERROR'
       })
     } else{
       const user = new User(req.body)
