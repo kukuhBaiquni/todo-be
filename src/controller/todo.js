@@ -90,8 +90,8 @@ async function updateTodo(req, res) {
 
 async function deleteListTodo(req, res) {
   try {
-    const { nameId, listId} = req.params
-    const newTodo = await Todo.findByIdAndUpdate({_id: nameId}, {$pull: { todoList : { _id: listId}}}, {new: true}).exec()
+    const { todoId, todoListId} = req.params
+    const newTodo = await Todo.findByIdAndUpdate({_id: todoId}, {$pull: { todoList : { _id: todoListId}}}, {new: true}).exec()
     res.status(200).json({
       success: true,
       message: 'Todo list has been deleted',
@@ -104,10 +104,10 @@ async function deleteListTodo(req, res) {
 
 async function updateListTodo(req, res) {
   try {
-    const { nameId, listId} = req.params
+    const { todoId, todoListId} = req.params
     const { name } = req.body
     const newTodo = await Todo.findOneAndUpdate({
-      _id: nameId, 'todoList._id': listId
+      _id: todoId, 'todoList._id': todoListId
     },{
       $set: {
         'todoList.$.name': name
