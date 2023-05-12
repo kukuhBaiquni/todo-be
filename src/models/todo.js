@@ -21,7 +21,7 @@ const todo = new Schema({
       type: Boolean,
       default: false,
     },
-    created_at: {
+    createdAt: {
       type: Date,
       default: new Date()
     }
