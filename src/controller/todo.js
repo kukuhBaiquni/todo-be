@@ -20,14 +20,20 @@ async function createTodoList(req, res) {
   try {
     const { todoId, name } = req.body
     const todo = await Todo.findOne({ _id: todoId })
-
-    todo.todoList.push({name})
-    await todo.save()
-    res.status(200).json({
-      success: true,
-      message: 'Todo list has been added',
-      data: todo
-    })
+    if (todo) {
+      todo.todoList.push({name})
+      await todo.save()
+      res.status(200).json({
+        success: true,
+        message: 'Todo list has been added',
+        data: todo
+      })
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'Todo not found'
+      })
+    }
 
   } catch(err) {
     console.log(err)
@@ -40,9 +46,11 @@ async function createTodoList(req, res) {
 
 async function getTodo(req, res) {
   try {
-    const {userId} = req.body
-    const todos = await Todo.find({owner: userId})
+    const {id} = req.params
+    const todos = await Todo.find({owner: id})
     res.status(200).json({
+      success: true,
+      message: 'Todos retrieved',
       data: todos
     })
   } catch {

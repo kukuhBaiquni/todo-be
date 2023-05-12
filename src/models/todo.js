@@ -20,6 +20,10 @@ const todo = new Schema({
     isDone: {
       type: Boolean,
       default: false,
+    },
+    created_at: {
+      type: Date,
+      default: new Date()
     }
   }],
   owner: {
