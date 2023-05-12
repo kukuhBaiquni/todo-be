@@ -2,6 +2,7 @@ const Todo = require('../models/todo')
 
 async function createTodo(req, res) {
   try {
+    // body {name, owner}
     const todo = new Todo(req.body)
     await todo.save()
     const newTodo = await Todo.findOne({_id: todo._id})
