@@ -6,6 +6,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const compression = require('compression')
 const helmet = require('helmet')
+const bodyParser = require('body-parser')
 require('dotenv').config()
 
 const app = express()
@@ -28,6 +29,8 @@ db.once('open', function() {
 
 // Config
 app.use(compression())
+app.use(bodyParser.urlencoded({ extended: false}))
+app.use(bodyParser.json())
 app.use(helmet())
 app.disable('x-powered-by')
 app.use(cors())
