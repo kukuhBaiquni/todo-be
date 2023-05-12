@@ -47,8 +47,8 @@ async function createTodoList(req, res) {
 
 async function getTodo(req, res) {
   try {
-    const {id} = req.params
-    const todos = await Todo.find({owner: id})
+    const {userId} = req.params
+    const todos = await Todo.find({owner: userId})
     res.status(200).json({
       success: true,
       message: 'Todos retrieved',
@@ -61,8 +61,8 @@ async function getTodo(req, res) {
 
 async function deleteTodo(req, res) {
   try {
-    const { id } = req.params
-    const newTodo = await Todo.findByIdAndRemove({ _id: id}).exec()
+    const { todoId } = req.params
+    const newTodo = await Todo.findByIdAndRemove({ _id: todoId}).exec()
     res.status(200).json({
       success: true,
       message: 'Todo has been deleted',
@@ -75,9 +75,9 @@ async function deleteTodo(req, res) {
 
 async function updateTodo(req, res) {
   try {
-    const { id } = req.params
+    const { todoId } = req.params
     const { name } = req.body
-    const newTodo = await Todo.findOneAndUpdate({ _id: id}, {name}, {new: true}).exec()
+    const newTodo = await Todo.findOneAndUpdate({ _id: todoId}, {name}, {new: true}).exec()
     res.status(200).json({
       success: true,
       message: 'Todo has been updated',
