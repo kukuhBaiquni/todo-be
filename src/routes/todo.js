@@ -10,5 +10,6 @@ router.put('/:todoId', controller.updateTodo)
 router.delete('/:todoId/:todoListId', controller.deleteListTodo)
 router.put('/:todoId/:todoListId', controller.updateListTodo)
 router.post('/todo-list', controller.createTodoList)
+router.patch('/:todoId/:todoListId/:isDone')
 
 module.exports = router

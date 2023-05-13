@@ -66,7 +66,7 @@ async function deleteTodo(req, res) {
     res.status(200).json({
       success: true,
       message: 'Todo has been deleted',
-      item: newTodo,
+      data: newTodo,
     })
   } catch {
     res.status(500).json()
@@ -81,7 +81,7 @@ async function updateTodo(req, res) {
     res.status(200).json({
       success: true,
       message: 'Todo has been updated',
-      item: newTodo
+      data: newTodo
     })
   } catch  {
     res.status(500).json()
@@ -95,7 +95,7 @@ async function deleteListTodo(req, res) {
     res.status(200).json({
       success: true,
       message: 'Todo list has been deleted',
-      item: newTodo
+      data: newTodo
     })
   } catch {
     res.status(500).json()
@@ -118,10 +118,35 @@ async function updateListTodo(req, res) {
     res.status(200).json({
       success: true,
       message: 'Todo list has been updated',
-      item: newTodo
+      data: newTodo
     })
   } catch {
     res.status(500).json()
+  }
+}
+
+async function updateStatusTodoList(req, res) {
+  try {
+    const {todoId, todoListId, isDone} = req.params
+    const todo = await Todo.findOneAndUpdate({
+      _id: todoId, 'todoList._id': todoListId
+    }, {
+      $set: {
+        'todoList.$.isDone': isDone
+      }
+    }, {
+      new: true
+    })
+    res.status(200).json({
+      success: true,
+      message: 'Todo list status has been updated',
+      data: todo
+    })
+  }catch {
+    res.status(500).json({
+      success:false,
+      message: 'Update todo status failed'
+    })
   }
 }
 
@@ -132,5 +157,6 @@ module.exports = {
   updateTodo,
   deleteListTodo,
   updateListTodo,
-  createTodoList
+  createTodoList,
+  updateStatusTodoList
 }
