@@ -1,8 +1,9 @@
 const User = require('../models/user')
 const rules = require('../constants/model-rules')
+const jwt = require('jsonwebtoken')
 
 async function register(req, res) {
-  
+
   try {
     const { name } = req.body
     if (name.length < rules.USER_NAME_MIN_LENGTH) {
@@ -18,10 +19,10 @@ async function register(req, res) {
         success: false,
         message: 'Name already exist',
       })
-    } else{
+    } else {
       const user = new User(req.body)
       await user.save()
-      const newUser = await User.findOne({_id: user._id})
+      const newUser = await User.findOne({ _id: user._id })
 
       res.status(201).json({
         success: true,
@@ -30,14 +31,30 @@ async function register(req, res) {
       })
     }
 
-    
-  } catch(err) {
+
+  } catch (err) {
     res.status(500).json()
   }
 
 
 }
 
+async function createUser(req, res) {
+
+  try {
+    const { email, password } = req.body;
+    const token = jwt.sign({ email, password }, 'secret')
+    res.status(200).json({
+      success: true,
+      message: 'User created',
+      accessToken: token
+    })
+  } catch (err) {
+    res.status(500).json()
+  }
+}
+
 module.exports = {
   register,
+  createUser
 }
